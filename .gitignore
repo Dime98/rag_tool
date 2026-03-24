@@ -1,0 +1,7 @@
+.ideea
+.vscode
+
+*.pyc
+**cache**
+
+**local**
