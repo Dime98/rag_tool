@@ -4,6 +4,8 @@ from pathlib import Path
 from rag_tool.encoder.encoder import Encoder
 from rag_tool.text_chunker.text_chunker import TextChunker
 
+from rag_tool.vector_store.vector_store import VectorStore
+
 
 def get_pdf_paths_from_config(pdf_paths: list[str]) -> list[Path]:
     pdf_candidates = []
@@ -40,6 +42,11 @@ def get_encoder_from_config(config: dict) -> Encoder:
         method=encoder_config.get("method"),
         kwargs=encoder_config.get("kwargs"),
     )
+
+
+def get_vector_store_from_config(config: dict, **kwargs) -> VectorStore:
+    vector_store_config = get_config_field(config, "vector_store")
+    return VectorStore.factory(method=vector_store_config.get("method"))
 
 
 def get_config_field(config: dict, key: str) -> dict:
