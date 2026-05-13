@@ -25,7 +25,7 @@ def load_config(config_path: str) -> dict:
     config_file_path = Path(config_path)
     if not config_file_path.exists():
         raise FileNotFoundError(f"{config_file_path.exists()=}")
-    return json.loads(config_file_path.read_text())
+    return json.loads(config_file_path.read_text(encoding="utf-8"))
 
 
 def get_chunker_from_config(config: dict) -> TextChunker:
