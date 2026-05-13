@@ -10,6 +10,7 @@ from rag_tool.config_utils.config_utils import (
     get_pdf_paths_from_config,
     get_chunker_from_config,
     get_encoder_from_config,
+    get_vector_store_from_config,
 )
 
 
@@ -63,12 +64,13 @@ if __name__ == "__main__":
     embeddings = encoder.encode(texts)
     print("Done encoding.")
 
-    import chromadb
-
-    chroma_client = chromadb.PersistentClient(experiment_folder / "chromadb")
-    collection = chroma_client.create_collection(
-        name=str(experiment_folder.stem),
-        metadata={"hnsw:space": "cosine"},
+    vector_store = get_vector_store_from_config(
+        config,
     )
-    collection.add(documents=texts, embeddings=embeddings, metadatas=metadata, ids=ids)
+    vector_store.create_collection(
+        path=experiment_folder / "chromadb", collection_name=str(experiment_folder.stem)
+    )
+    vector_store.add(
+        documents=texts, embeddings=embeddings, metadatas=metadata, ids=ids
+    )
     print("Done creating vector DB.")
