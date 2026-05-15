@@ -44,7 +44,6 @@ if __name__ == "__main__":
     save_to = Path(args.save_to)
     experiment_folder = save_to / secrets.token_hex(8)
     experiment_folder.mkdir(parents=True)
-    (experiment_folder / "config.json").write_text(json.dumps(config, indent=4))
 
     pages = extract_pdf_pages(pdf_folders=pdf_file_paths)
     print(f"Total number pages is '{len(pages)}'.")
@@ -74,3 +73,11 @@ if __name__ == "__main__":
         documents=texts, embeddings=embeddings, metadatas=metadata, ids=ids
     )
     print("Done creating vector DB.")
+
+    # add additional data beside base config
+    config.update(
+        {
+            "participating_pdf_files": [str(file) for file in pdf_file_paths],
+        }
+    )
+    (experiment_folder / "config.json").write_text(json.dumps(config, indent=4))
