@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from typing import Any
 
 from rag_tool.encoder.encoder import Encoder
 from rag_tool.text_chunker.text_chunker import TextChunker
@@ -49,8 +50,8 @@ def get_vector_store_from_config(config: dict, **kwargs) -> VectorStore:
     return VectorStore.factory(method=vector_store_config.get("method"))
 
 
-def get_config_field(config: dict, key: str) -> dict:
-    value = config.get(key)
+def get_config_field(config: dict, key: str, default_key: Any = None) -> dict:
+    value = config.get(key, default_key)
     if not value:
         raise ValueError(f"Config is missing '{key}' field.")
     return value
