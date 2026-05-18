@@ -19,4 +19,4 @@ class SentenceTransformerEmbedder(Encoder):
         self.embedding_model = SentenceTransformer(model_name)
 
     def encode(self, texts: list[str]):
-        return self.embedding_model.encode(texts, show_progress_bar=True)
+        return self.embedding_model.encode(texts)
