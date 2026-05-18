@@ -7,6 +7,8 @@ from rag_tool.text_chunker.text_chunker import TextChunker
 
 from rag_tool.vector_store.vector_store import VectorStore
 
+from rag_tool.llm import LLM
+
 
 def get_pdf_paths_from_config(pdf_paths: list[str]) -> list[Path]:
     pdf_candidates = []
@@ -48,6 +50,13 @@ def get_encoder_from_config(config: dict) -> Encoder:
 def get_vector_store_from_config(config: dict, **kwargs) -> VectorStore:
     vector_store_config = get_config_field(config, "vector_store")
     return VectorStore.factory(method=vector_store_config.get("method"))
+
+
+def get_llm_from_config(config: dict) -> LLM:
+    llm_config = get_config_field(config, "llm_config")
+    return LLM.factory(
+        provider=llm_config.get("provider"), kwargs=llm_config.get("kwargs")
+    )
 
 
 def get_config_field(config: dict, key: str, default_key: Any = None) -> dict:
