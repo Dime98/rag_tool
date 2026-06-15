@@ -10,7 +10,7 @@ from rag_tool.config_utils.config_utils import (
 from rag_tool.llm import build_prompt
 
 
-def ask_llm(chat_config_path: Path):
+def initialize_llm(chat_config_path: Path):
     chat_config = load_config(chat_config_path)
 
     experiment_folder = Path(get_config_field(chat_config, "vector_base_path"))
@@ -24,22 +24,28 @@ def ask_llm(chat_config_path: Path):
     encoder = get_encoder_from_config(experiment_config)
     vector_store = get_vector_store_from_config(experiment_config)
 
-    top_k = get_config_field(chat_config, "top_k", 3)
-
     vector_store.load_collection(
         db_path=str(db_path),
         collection_name=str(experiment_folder.stem),
     )
 
     llm = get_llm_from_config(chat_config)
+    top_k = get_config_field(chat_config, "top_k", 3)
 
-    def _ask_llm(_llm=llm, _encoder=encoder, _vector_store=vector_store): ...
+    def _ask_llm(
+        user_input,
+        _llm=llm,
+        _encoder=encoder,
+        _vector_store=vector_store,
+        _top_k=top_k,
+    ):
+        return get_single_answer(user_input, _llm, _encoder, _vector_store, _top_k)
 
     return _ask_llm
 
 
 def get_single_answer(user_input: str, llm, encoder, vector_store, top_k):
-    query_embedding = encoder.encode([user_input])
+    query_embedding = encoder.encode([user_input])[0]
     result = vector_store.query(query_embedding, top_k=top_k)
     retrieved_chunks = result["documents"][0]
     retrieved_metadata = result["metadatas"][0]
@@ -51,13 +57,15 @@ def get_single_answer(user_input: str, llm, encoder, vector_store, top_k):
     return response
 
 
-def chat_loop():
+def chat_loop(config_path: Path):
+    ask_llm = initialize_llm(chat_config_path=config_path)
+
     while True:
         user_input = input("\nEnter question ('x' to exit) >> ")
         if user_input in ["x", "X"]:
             break
 
-        response = get_single_answer(user_input)
+        response = ask_llm(user_input)
         response_content = response["message"]["content"]
 
         print(f"{response_content}")
