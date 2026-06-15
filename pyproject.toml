@@ -12,11 +12,12 @@ authors=[
 ]
 dynamic=["version"]
 
-[tool.setuptools]
-packages=["rag_tool"]
+[tool.setuptools.packages.find]
+where = ["."]
 
 [tool.ruff.lint]
 select = ["E", "F", "D"]
+ignore = ["D"]
 
 [tool.ruff.lint.pydocstyle]
 convention="google"
