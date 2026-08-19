@@ -43,7 +43,7 @@ python cli_make_database.py -config configs/db_512_overlap64.json -save-to local
 
 ```json
 {
-    "pdf_paths": [
+    "pdf_source": [
         "local/dcs_user_manuals/DCS MIG-29 Flight Manual EN.pdf",
         "local/dcs_user_manuals/DCS F-16C Early Access Guide EN.pdf"
     ],
@@ -67,6 +67,9 @@ python cli_make_database.py -config configs/db_512_overlap64.json -save-to local
 ```
 
 </details>
+
+> **[NOTE]** The `pdf_source` key can be a list of individual '.pdf' or path to a directory containing '.pdf' files.
+
 
 ### Benchmark (optional)
 

@@ -23,7 +23,7 @@ class BuildVectorStoreResult:
 
 def build_vector_store(config_path: str, save_to: str):
     config = load_config(config_path)
-    pdf_file_paths = get_pdf_paths_from_config(config["pdf_paths"])
+    pdf_file_paths = get_pdf_source_from_config(config)
     print(f"Found {len(pdf_file_paths)} .pdf file(s).")
 
     # save experiments output

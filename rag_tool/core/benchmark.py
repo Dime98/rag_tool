@@ -38,7 +38,7 @@ def parse_args(args):
 
 
 def experiments_summary(experiment_id: Path, config: dict):
-    input_pdf_files = len(get_config_field(config, "pdf_paths"))
+    input_pdf_files = len(get_config_field(config, "pdf_source"))
     participating_pdf_files = len(get_config_field(config, "participating_pdf_files"))
     chunking_configs = get_config_field(config, "chunking_method")
     encoder_configs = get_config_field(config, "encoder_method")
