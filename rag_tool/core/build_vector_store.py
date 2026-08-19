@@ -48,16 +48,37 @@ def build_vector_store(config_path: str, save_to: str):
     embeddings = encoder.encode(texts)
     print("Done encoding.")
 
-    vector_store = get_vector_store_from_config(
-        config,
-    )
-    vector_store.create_collection(
-        path=experiment_folder / "chromadb", collection_name=str(experiment_folder.stem)
-    )
-    vector_store.add(
-        documents=texts, embeddings=embeddings, metadatas=metadata, ids=ids
-    )
+    vector_store = get_vector_store_from_config(config)
+    vector_store.create_collection(path=experiment_folder / "chromadb", collection_name=str(experiment_folder.stem))
+    vector_store.add(documents=texts, embeddings=embeddings, metadatas=metadata, ids=ids)
     print("Done creating vector DB.")
+
+    if store_stats:
+        percentiles = [25, 50, 75, 90, 95, 99, 99.9]
+
+        chunks_char_len = np.array([len(chunk["text_chunk"]) for chunk in text_chunks])
+        chunks_words_len = np.array([len(re.findall(r"\w+", chunk["text_chunk"])) for chunk in text_chunks])
+        embedding_norms = np.linalg.norm(embeddings, axis=1)
+
+        stats = get_stats(
+            chunks_char_len=chunks_char_len,
+            chunks_words_len=chunks_words_len,
+            embeddings=embeddings,
+            embedding_norms=embedding_norms,
+            percentiles=percentiles,
+        )
+        (experiment_folder / "stats.json").write_text(json.dumps(stats, indent=4))
+        for k, v in stats.items():
+            print(k, v)
+
+        make_plots(
+            experiment_folder=experiment_folder,
+            chunks_char_len=chunks_char_len,
+            chunks_words_len=chunks_words_len,
+            embeddings=embeddings,
+            embedding_norms=embedding_norms,
+            percentiles=percentiles,
+        )
 
     # add additional data beside base config
     config.update(
