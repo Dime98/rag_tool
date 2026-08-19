@@ -45,9 +45,7 @@ def get_pdf_source_from_config(config: dict) -> list[Path]:
     elif isinstance(pdf_source_config, str):
         return _extract_pdf_from_path(pdf_source_config)
     else:
-        raise ValueError(
-            "'pdf_path' should be either list of '.pdf' file paths or a folder containing '.pdf'"
-        )
+        raise ValueError("'pdf_path' should be either list of '.pdf' file paths or a folder containing '.pdf'")
 
 
 def load_config(config_path: str) -> dict:
@@ -80,9 +78,7 @@ def get_vector_store_from_config(config: dict, **kwargs) -> VectorStore:
 
 def get_llm_from_config(config: dict) -> LLM:
     llm_config = get_config_field(config, "llm_config")
-    return LLM.factory(
-        provider=llm_config.get("provider"), kwargs=llm_config.get("kwargs")
-    )
+    return LLM.factory(provider=llm_config.get("provider"), kwargs=llm_config.get("kwargs"))
 
 
 def get_config_field(config: dict, key: str, default_key: Any = None) -> dict:

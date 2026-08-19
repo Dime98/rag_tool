@@ -21,9 +21,7 @@ def make_llm(llm_model: str, system_prompt: str):
 def make_context(retrieval, query):
     chunks = []
     for text, metadata in zip(retrieval["documents"][0], retrieval["metadatas"][0]):
-        chunks.append(
-            {"text": text, "source": metadata["source"], "page": metadata["page"]}
-        )
+        chunks.append({"text": text, "source": metadata["source"], "page": metadata["page"]})
 
     context = "\n\n".join(c["text"] for c in chunks)
     return f"Context:\n {context} \n\nQuestion: {query} \n\nAnswer:"

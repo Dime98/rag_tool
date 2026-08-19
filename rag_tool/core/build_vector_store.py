@@ -1,13 +1,17 @@
 import json
+import re
 import secrets
 from pathlib import Path
 
+import numpy as np
 from attr import dataclass
 
+from rag_tool.analysis.plots import make_plots
+from rag_tool.analysis.stats import get_stats
 from rag_tool.pdf_utils.pdf_utils import extract_pdf_pages
 from rag_tool.config_utils.config_utils import (
     load_config,
-    get_pdf_paths_from_config,
+    get_pdf_source_from_config,
     get_chunker_from_config,
     get_encoder_from_config,
     get_vector_store_from_config,
@@ -21,7 +25,23 @@ class BuildVectorStoreResult:
     config: dict
 
 
-def build_vector_store(config_path: str, save_to: str):
+def open_folder(folder_to_open):
+    import platform
+    import os
+    import subprocess
+    from pathlib import Path
+
+    folder = Path(folder_to_open).resolve()
+
+    if platform.system() == "Windows":
+        os.startfile(folder)
+    elif platform.system() == "Darwin":
+        subprocess.run(["open", str(folder)])
+    else:
+        subprocess.run(["xdg-open", str(folder)])
+
+
+def build_vector_store(config_path: str, save_to: str, store_stats: bool):
     config = load_config(config_path)
     pdf_file_paths = get_pdf_source_from_config(config)
     print(f"Found {len(pdf_file_paths)} .pdf file(s).")
@@ -87,6 +107,9 @@ def build_vector_store(config_path: str, save_to: str):
         }
     )
     (experiment_folder / "config.json").write_text(json.dumps(config, indent=4))
+
+    # opens experiment folder in system's file manager
+    open_folder(str(experiment_folder))
 
     return BuildVectorStoreResult(
         experiment_id=experiment_folder.name,

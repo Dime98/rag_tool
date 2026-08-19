@@ -42,8 +42,6 @@ def build_prompt(
     """Builds promt to include the source pdf and respective pages for eaach chunk."""
     context_parts = []
     for chunk, meta in zip(retrieved_chunks, retrieved_metadata):
-        context_parts.append(
-            f"[Source: {meta['source']} | Page: {meta['page']}]\n{chunk}"
-        )
+        context_parts.append(f"[Source: {meta['source']} | Page: {meta['page']}]\n{chunk}")
     context = "\n\n---\n\n".join(context_parts)
     return f"Context:\n{context}\n\nQuestion: {user_input}"

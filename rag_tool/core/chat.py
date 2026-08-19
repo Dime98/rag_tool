@@ -50,9 +50,7 @@ def get_single_answer(user_input: str, llm, encoder, vector_store, top_k):
     retrieved_chunks = result["documents"][0]
     retrieved_metadata = result["metadatas"][0]
 
-    response = llm.chat(
-        prompt=build_prompt(retrieved_chunks, retrieved_metadata, user_input)
-    )
+    response = llm.chat(prompt=build_prompt(retrieved_chunks, retrieved_metadata, user_input))
 
     return response
 

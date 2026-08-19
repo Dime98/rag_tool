@@ -19,9 +19,7 @@ def parse_args(args):
         required=True,
         help="Folder with experiments output.",
     )
-    parser.add_argument(
-        "-save-to", type=str, required=True, help="Path to save benchmarking results."
-    )
+    parser.add_argument("-save-to", type=str, required=True, help="Path to save benchmarking results.")
     parser.add_argument(
         "-experiment-summary",
         action="store_false",

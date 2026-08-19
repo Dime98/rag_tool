@@ -26,9 +26,7 @@ def parse_args(args):
         required=True,
         help="Folder with experiments output.",
     )
-    parser.add_argument(
-        "-save-to", type=str, required=True, help="Path to save benchmarking results."
-    )
+    parser.add_argument("-save-to", type=str, required=True, help="Path to save benchmarking results.")
     parser.add_argument(
         "-experiment-summary",
         action="store_false",
@@ -55,10 +53,7 @@ def check_expected_in_retrieved(
     retrieved_chunks: list[str], expected_answers: list[str], match_mode: str = "any"
 ) -> bool:
     combined_text = " ".join(retrieved_chunks).lower()
-    matches = [
-        bool(re.search(re.escape(ans.lower()), combined_text))
-        for ans in expected_answers
-    ]
+    matches = [bool(re.search(re.escape(ans.lower()), combined_text)) for ans in expected_answers]
     return any(matches) if match_mode == "any" else all(matches)
 
 
@@ -96,9 +91,7 @@ def run_benchmark(
         encoder = get_encoder_from_config(config)
         vector_store = get_vector_store_from_config(config)
 
-        vector_store.load_collection(
-            db_path=str(db_path), collection_name=str(experiment_id.stem)
-        )
+        vector_store.load_collection(db_path=str(db_path), collection_name=str(experiment_id.stem))
 
         qa_pairs = benchmark_config.get("qa_pairs")
 
@@ -149,6 +142,4 @@ def run_benchmark(
         print(f"    {hit_success_rate=} %\n")
 
     save_to.mkdir(exist_ok=True, parents=True)
-    (save_to / "benchmark_config_results.json").write_text(
-        json.dumps(sorted_benchmark_config_results, indent=4)
-    )
+    (save_to / "benchmark_config_results.json").write_text(json.dumps(sorted_benchmark_config_results, indent=4))
