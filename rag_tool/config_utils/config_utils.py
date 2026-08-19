@@ -61,6 +61,6 @@ def get_llm_from_config(config: dict) -> LLM:
 
 def get_config_field(config: dict, key: str, default_key: Any = None) -> dict:
     value = config.get(key, default_key)
-    if not value:
+    if value is None:
         raise ValueError(f"Config is missing '{key}' field.")
     return value
